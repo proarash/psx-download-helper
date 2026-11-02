@@ -13,6 +13,10 @@ Written in Go using only the standard library.
 
 Builds stripped binaries into `out/` for windows/amd64, windows/386, linux/amd64, linux/386, and darwin/amd64.
 
+## Release
+
+Push a tag like `v1.0.0` (or run the `release` workflow manually with a tag). GitHub Actions builds all targets with `build.sh` and publishes them, plus `SHA256SUMS.txt`, to a GitHub release. [RELEASE.md](RELEASE.md) is used as the release notes.
+
 ## Modes
 
 ### Auto mode (recommended)
