@@ -270,7 +270,7 @@ func getURLs(raw, out, outDir string) error {
 		for start := 0; ; start += probeBatch {
 			found := make([]bool, probeBatch)
 			var wg sync.WaitGroup
-			for j := 0; j < probeBatch; j++ {
+			for j := range probeBatch {
 				wg.Add(1)
 				go func(j int) {
 					defer wg.Done()
@@ -301,7 +301,7 @@ func getURLs(raw, out, outDir string) error {
 	if out == "" {
 		base := name
 		if m != nil {
-			base = strings.TrimSuffix(m[1], "_")
+			base = m[1] + "0" + m[3]
 		}
 		out = filepath.Join(outDir, strings.TrimSuffix(base, ".pkg")+".txt")
 	}

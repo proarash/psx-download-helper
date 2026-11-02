@@ -13,10 +13,6 @@ Written in Go using only the standard library.
 
 Builds stripped binaries into `out/` for windows/amd64, windows/386, linux/amd64, linux/386, and darwin/amd64.
 
-## Release
-
-Push a tag like `v1.0.0` (or run the `release` workflow manually with a tag). GitHub Actions builds all targets with `build.sh` and publishes them, plus `SHA256SUMS.txt`, to a GitHub release. [RELEASE.md](RELEASE.md) is used as the release notes.
-
 ## Modes
 
 ### Auto mode (recommended)
@@ -28,7 +24,7 @@ psx-helper --auto 1 --path D:\pkgs
 - Listens on your **Ethernet** adapter's IPv4 address, port `8080`. Virtual, VPN, and WSL adapters are skipped.
 - Serves any requested `.pkg` file found in `--path` (default: current directory), with range/resume support.
 - `--auto 0`: only logs the `.pkg` URLs the console requests.
-- `--auto 1`: logs them too, and for each new package it automatically probes every part (`_0.pkg`, `_1.pkg`, …) and writes the list to `<package>.txt` inside `--path`.
+- `--auto 1`: logs them too, and for each new package it automatically probes every part (`_0.pkg`, `_1.pkg`, …) and writes the list to `<package>_0.txt` (e.g. `EP9000-CUSA00001_00-XXXX_0.txt`) inside `--path`.
 
 ### Manual proxy mode
 

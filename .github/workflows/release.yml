@@ -2,13 +2,7 @@ name: release
 
 on:
   push:
-    tags:
-      - "v*"
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag to release (e.g. v1.0.0)"
-        required: true
+    tags: ["v*"]
 
 permissions:
   contents: write
@@ -16,33 +10,12 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      TAG: ${{ github.event.inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-
-      - name: Vet
-        run: go vet ./...
-
-      - name: Build
-        run: sh build.sh
-
-      - name: Checksums
-        working-directory: out
-        run: sha256sum * > SHA256SUMS.txt
-
-      - name: Publish release
+      - run: sh build.sh && (cd out && sha256sum * > SHA256SUMS.txt)
+      - run: gh release create "$GITHUB_REF_NAME" out/* --notes-file RELEASE.md
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          notes=""
-          [ -f RELEASE.md ] && notes="--notes-file RELEASE.md" || notes="--generate-notes"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" out/* --clobber
-          else
-            gh release create "$TAG" out/* --title "$TAG" --target "$GITHUB_SHA" $notes
-          fi
