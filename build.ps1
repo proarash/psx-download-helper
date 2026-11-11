@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
 $name = 'psx-helper'
-$targets = @('windows/amd64', 'windows/386', 'linux/amd64', 'linux/386', 'darwin/amd64')
+$targets = @('windows/amd64')
 
 if (Test-Path out) { Remove-Item -Recurse -Force out }
 New-Item -ItemType Directory -Force out | Out-Null

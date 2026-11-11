@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")"
 
 name=psx-helper
-targets="windows/amd64 windows/386 linux/amd64 linux/386 darwin/amd64"
+targets="linux/amd64"
 
 rm -rf out
 mkdir -p out
