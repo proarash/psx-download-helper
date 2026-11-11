@@ -221,10 +221,10 @@ func alive(c *http.Client, u string) bool {
 	resp, err := c.Head(u)
 	if err == nil {
 		resp.Body.Close()
-		if resp.StatusCode == http.StatusOK {
+		switch {
+		case resp.StatusCode == http.StatusOK && resp.ContentLength > 0:
 			return true
-		}
-		if resp.StatusCode != http.StatusMethodNotAllowed {
+		case resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusMethodNotAllowed:
 			return false
 		}
 	}
@@ -239,7 +239,25 @@ func alive(c *http.Client, u string) bool {
 		return false
 	}
 	resp.Body.Close()
-	return resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusPartialContent
+	switch resp.StatusCode {
+	case http.StatusPartialContent:
+		return rangeTotal(resp.Header.Get("Content-Range")) > 0
+	case http.StatusOK:
+		return resp.ContentLength > 0
+	}
+	return false
+}
+
+func rangeTotal(cr string) int64 {
+	_, total, ok := strings.CutLast(cr, "/")
+	if !ok {
+		return 0
+	}
+	n, err := strconv.ParseInt(strings.TrimSpace(total), 10, 64)
+	if err != nil {
+		return 0
+	}
+	return n
 }
 
 func getURLs(raw, out, outDir string) error {
